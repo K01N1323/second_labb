@@ -1,22 +1,23 @@
 #include <stdexcept>
-template <class T>
 
+template <class T>
 class DynamicArray{
     private:
         T* items;
         int size;
     public:
         // setters
-        DynamicArray(int size){
-            this->size = size;
-            this->items = new T[size];
-        }
+        DynamicArray(int size) : DynamicArray (nullptr, size){}
         DynamicArray(T* items, int count){
             this->size = count;
             this->items = new T[size];
-
-            for (int element = 0; element < size; element++){
-                this->items[element] = items[element];
+            if (items == nullptr){
+                for (int element = 0; element < size; element++){
+                this->items[element] = T(0);
+            }else{
+                for (int element = 0; element < size; element++){
+                this->items[element] = items[element];//T();
+            }
             }
         }
         DynamicArray(const DynamicArray<T>& dynamic_array){
@@ -28,10 +29,10 @@ class DynamicArray{
             }
         }
         // getters
-        int GetSize(){
+        int GetSize() const{
             return this->size;
         }
-        T Get(int index){
+        const T& Get(int index) const{
             if (index < 0 || index >= size){
                 throw std::out_of_range("Индекс невалиден");
             }
@@ -57,5 +58,9 @@ class DynamicArray{
 
             this->size = new_size;
             this->items = new_items;
+        }
+        // destructor
+            ~DynamicArray(){
+                delete[] items;
         }
 }
