@@ -31,7 +31,7 @@ class MutableArraySequence: public Sequence<T>{
         Sequence<T>* GetSubsequence(int start_index, int end_index) const override {
             if (start_index < 0 || start_index >= this->GetLength() ||  end_index < 0 || end_index >= this->GetLength() || start_index > end_index) {throw std::out_of_range("Индексы невалидны для данного списка"); }
    
-            ArraySequence<T>* result = new ArraySequence<T>();    
+            MutableArraySequence<T>* result = new MutableArraySequence<T>();    
     
             for (int index = start_index; index <= end_index; index++) {
                 result->Append(this->Get(index));
@@ -75,4 +75,15 @@ class MutableArraySequence: public Sequence<T>{
 
             return this;
         }
+        // конкатинация
+        Sequence<T>* Concat(Sequence<T>* list) override{
+            ArraySequence<T>* new_array = new MutableArraySequence<T>(*this);
+
+            for (int index = 0; index < list->GetLength(); index++){
+                new_array->Append(list->Get(index));
+            }
+
+        return new_array;
+        }
+
 }

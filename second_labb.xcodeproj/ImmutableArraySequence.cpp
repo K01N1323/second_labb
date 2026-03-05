@@ -54,7 +54,7 @@ public:
 
         return copy;
     }
-
+    // вставка в начало
     Sequence<T>* Prepend(T item) override {
         ImmutableArraySequence<T>* copy = new ImmutableArraySequence<T>(*this);
 
@@ -68,7 +68,7 @@ public:
 
         return copy;
     }
-
+    // вставка по индексу
     Sequence<T>* InsertAt(T item, int index) override {
         if (index < 0 || index >= this->items->GetSize()) {
             throw std::out_of_range("Индекс вне диапазона");
@@ -86,8 +86,18 @@ public:
 
         return copy;
     }
+    // конкатинация 
+    Sequence<T>* Concat(Sequence<T>* list) override {
+        ImmutableArraySequence<T>* new_array = new ImmutableArraySequence<T>(*this);
 
-    Sequence<T>* Concat(Sequence<T>* list) override{
-        
+        for (int index = 0; index < list->GetLength(); index++) {
+            new_array->items->Resize(new_array->items->GetSize() + 1);
+            new_array->items->Set(new_array->items->GetSize() - 1, list->Get(index));
     }
+    
+    return new_array;
+}
+
 };
+
+
