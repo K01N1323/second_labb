@@ -35,7 +35,17 @@ public:
         return this->items->Get(index);
     }
 
-    // operations
+    Sequence<T>* GetSubsequence(int start_index, int end_index) const override {
+    if (start_index < 0 || start_index >= this->GetLength() ||  end_index < 0 || end_index >= this->GetLength() || start_index > end_index) {throw std::out_of_range("Индексы невалидны для данного списка"); }
+   
+    ArraySequence<T>* result = new ArraySequence<T>();    
+    
+    for (int index = start_index; index <= end_index; index++) {
+        result->Append(this->Get(index));
+    }
+    return result;
+    }
+    // methods
     Sequence<T>* Append(T item) override {
         ImmutableArraySequence<T>* copy = new ImmutableArraySequence<T>(*this);
         
@@ -75,5 +85,9 @@ public:
         copy->items->Set(index, item);
 
         return copy;
+    }
+
+    Sequence<T>* Concat(Sequence<T>* list) override{
+        
     }
 };

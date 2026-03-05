@@ -39,6 +39,8 @@ class ImmutableListSequence: public Sequence<T>{
         int GetLength() const override{
             return this->items->GetLength();
         }
+
+        
         // setters
         Sequence<T>* Append(T item) override{
             ImmutableListSequence<T>* sub_list_sequence = new ImmutableListSequence(*this);

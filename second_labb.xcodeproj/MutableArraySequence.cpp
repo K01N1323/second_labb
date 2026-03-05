@@ -27,6 +27,17 @@ class MutableArraySequence: public Sequence<T>{
         const T& Get(int index)const override{
             return this->items->Get(index);
         }
+
+        Sequence<T>* GetSubsequence(int start_index, int end_index) const override {
+            if (start_index < 0 || start_index >= this->GetLength() ||  end_index < 0 || end_index >= this->GetLength() || start_index > end_index) {throw std::out_of_range("Индексы невалидны для данного списка"); }
+   
+            ArraySequence<T>* result = new ArraySequence<T>();    
+    
+            for (int index = start_index; index <= end_index; index++) {
+                result->Append(this->Get(index));
+            }
+            return result;
+        }
         // setters
         // вставка в конец
         Sequence<T>* Append(T item) override{
