@@ -13,11 +13,12 @@ class DynamicArray{
             this->items = new T[size];
             if (items == nullptr){
                 for (int element = 0; element < size; element++){
-                this->items[element] = T(0);
+                    this->items[element] = T(0);
+                }
             }else{
                 for (int element = 0; element < size; element++){
-                this->items[element] = items[element];//T();
-            }
+                    this->items[element] = items[element];
+                }
             }
         }
         DynamicArray(const DynamicArray<T>& dynamic_array){
@@ -50,7 +51,7 @@ class DynamicArray{
             T* new_items = new T[new_size];
             
             int elements_to_copy = (new_size < size) ? new_size : size;
-            for (int element = 0; element < elenents_to_copy; element++){
+            for (int element = 0; element < elements_to_copy; element++){
                 new_items[element] = items[element];
             }
 
@@ -60,7 +61,7 @@ class DynamicArray{
             this->items = new_items;
         }
         // destructor
-            ~DynamicArray(){
-                delete[] items;
+        ~DynamicArray(){
+            delete[] items;
         }
-}
+};

@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include "LinkedList.cpp"
+#include "Sequence.cpp"
 
 template <class T>
 class ImmutableListSequence: public Sequence<T>{
@@ -40,6 +42,16 @@ class ImmutableListSequence: public Sequence<T>{
             return this->items->GetLength();
         }
 
+        Sequence<T>* GetSubsequence(int start_index, int end_index) const override{
+            LinkedList<T>* raw_list = this->items->GetSubList(start_index, end_index);
+
+            ImmutableListSequence<T>* new_list = new ImmutableListSequence<T>(*raw_list);
+
+            delete raw_list;
+            
+            return new_list;
+        }
+
         
         // setters
         Sequence<T>* Append(T item) override{
@@ -65,5 +77,35 @@ class ImmutableListSequence: public Sequence<T>{
 
             return sub_list_sequence;    
         }
+        // конкатинация 
+        Sequence<T>* Concat(Sequence<T>* list) override{
+            LinkedList<T>* raw_list = this->items->Concat(list);
 
-}
+            ImmutableListSequence<T>* new_list = new ImmutableListSequence(*raw_list);
+
+            return new_list;
+        }
+        // map
+        template <typename T2>
+        Sequence<T2>* Map(T2 (*mapper)(T)) const {
+            ImmutableListSequence<T2>* new_list = new ImmutableListSequence<T2>();
+
+            for (int index = 0; index < this->GetLength(); index++){
+                new_list->Append(mapper(this->Get(index)));
+            }
+
+            return new_list;
+        }
+        // where 
+        Sequence<T>* Where(bool (*where)(T)) const {
+            ImmutableListSequence<T>* new_list = new ImmutableListSequence<T>();
+
+            for (int index = 0; index < this->GetLength(); index++){
+                if (where(this->Get(index))){
+                    new_list->Append(this->Get(index));
+                }
+            }
+            
+            return new_list;
+        }    
+};

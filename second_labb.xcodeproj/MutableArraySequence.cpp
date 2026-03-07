@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include "DynamicArray.cpp"
+#include "Sequence.cpp"
 
 template <class T>
 class MutableArraySequence: public Sequence<T>{
@@ -6,17 +8,17 @@ class MutableArraySequence: public Sequence<T>{
         DynamicArray<T>* items;
     public:
         // constructor
-        ArraySequence():ArraySequence(nullptr, 0){}
+        MutableArraySequence():MutableArraySequence(nullptr, 0){}
 
-        ArraySequence(T* items, int count){
+        MutableArraySequence(T* items, int count){
             if (items == nullptr){
                 this->items = new DynamicArray<T>(0);
             }else{
-                this->items = new DynamicArray<T>(items, count)
+                this->items = new DynamicArray<T>(items, count);
             }
         }
         // distructor
-        ~ArraySequence(){
+        ~MutableArraySequence(){
             delete this->items;
         }
         // getters
@@ -77,7 +79,7 @@ class MutableArraySequence: public Sequence<T>{
         }
         // конкатинация
         Sequence<T>* Concat(Sequence<T>* list) override{
-            ArraySequence<T>* new_array = new MutableArraySequence<T>(*this);
+            MutableArraySequence<T>* new_array = new MutableArraySequence<T>(*this);
 
             for (int index = 0; index < list->GetLength(); index++){
                 new_array->Append(list->Get(index));
@@ -85,5 +87,27 @@ class MutableArraySequence: public Sequence<T>{
 
         return new_array;
         }
+        // map
+        template <typename T2>
+        Sequence<T2>* Map(T2 (*mapper)(T)) const {
+            MutableArraySequence<T2>* new_array = new MutableArraySequence<T2>();
 
-}
+            for (int index = 0; index < this->GetLength(); index++){
+                new_array->Append(mapper(this->items->Get(index)));
+            }
+
+            return new_array;
+        }
+        // where 
+         Sequence<T>* Where(bool (*where)(T)) const {
+            MutableArraySequence<T>* new_array = new MutableArraySequence<T>();
+
+            for (int index = 0; index < this->GetLength(); index++){
+                if (where(this->Get(index))){
+                    new_array->Append(this->Get(index));
+                }
+            }
+            
+            return new_array;
+        }
+};

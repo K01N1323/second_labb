@@ -1,10 +1,6 @@
 #include <stdexcept>
 
 template <class T>
-struct Node{
-    T num;
-    Node* next;
-}
 class LinkedList{
     private:
         struct Node{
@@ -21,7 +17,7 @@ class LinkedList{
         Node* head;
         Node* tail;
 
-        int size
+        int size;
     public:
         // constructors
         LinkedList(): LinkedList(nullptr, 0) {}
@@ -135,7 +131,7 @@ class LinkedList{
         void Prepend(T item){
             Node* new_node = new Node(item);
 
-            if (this->head == nullptr) { // Если список был пуст
+            if (this->head == nullptr) { 
                 this->head = new_node;
                 this->tail = new_node;
             }else {
@@ -183,7 +179,5 @@ class LinkedList{
                 delete current;
                 current = local_current;
             }
-
-    
-
-}
+        }
+};

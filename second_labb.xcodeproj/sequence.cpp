@@ -20,4 +20,24 @@ public:
     virtual Sequence<T>* InsertAt(T item, int index) = 0;
     // сцепление 
     virtual Sequence<T>* Concat(Sequence<T>* list) = 0;
+    // перегрузка оператора []
+    const T& operator[](int index)const{
+        return this->Get(index);
+    }
+    // map 
+    template <typename T2>
+    virtual Sequence<T2>* Map(T2 (*mapper)(T)) const = 0;
+    // where 
+    virtual Sequence<T>* Where(bool (*where)(T)) const  = 0;
+    // reduce 
+    template <typename T2>
+    T2 Reduce(T2 (*reduce_func)(T2, T), T2 start_value) const{
+        T2 result = start_value;
+
+        for (int index = 0; index < this->GetLength(); index++){
+            result = reduce_func(result, this->Get(index));
+        }
+
+        return result;
+    }
 };

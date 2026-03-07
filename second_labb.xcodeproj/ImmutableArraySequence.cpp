@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include "DynamicArray.cpp"
+#include "Sequence.cpp"
 
 template <class T>
 class ImmutableArraySequence : public Sequence<T> {
@@ -13,7 +15,7 @@ public:
         if (items == nullptr || count == 0) {
             this->items = new DynamicArray<T>(0);
         } else {
-            this->items = new DynamicArray<T>(items, count); // добавлена ;
+            this->items = new DynamicArray<T>(items, count); 
         }
     }
 
@@ -38,7 +40,7 @@ public:
     Sequence<T>* GetSubsequence(int start_index, int end_index) const override {
     if (start_index < 0 || start_index >= this->GetLength() ||  end_index < 0 || end_index >= this->GetLength() || start_index > end_index) {throw std::out_of_range("Индексы невалидны для данного списка"); }
    
-    ArraySequence<T>* result = new ArraySequence<T>();    
+    ImmutableArraySequence<T>* result = new ImmutableArraySequence<T>();    
     
     for (int index = start_index; index <= end_index; index++) {
         result->Append(this->Get(index));
@@ -93,11 +95,33 @@ public:
         for (int index = 0; index < list->GetLength(); index++) {
             new_array->items->Resize(new_array->items->GetSize() + 1);
             new_array->items->Set(new_array->items->GetSize() - 1, list->Get(index));
-    }
-    
-    return new_array;
-}
+        }
 
+        return new_array;
+    }
+    // map 
+    template <typename T2>
+        Sequence<T2>* Map(T2 (*mapper)(T)) const {
+            ImmutableArraySequence<T2>* new_array = new ImmutableArraySequence<T2>();
+
+            for (int index = 0; index < this->GetLength(); index++){
+                new_array->Append(mapper(this->items->Get(index)));
+            }
+
+            return new_array;
+        }
+    //where 
+     Sequence<T>* Where(bool (*where)(T)) const {
+            ImmutableArraySequence<T>* new_array = new ImmutableArraySequence<T>();
+
+            for (int index = 0; index < this->GetLength(); index++){
+                if (where(this->Get(index))){
+                    new_array->Append(this->Get(index));
+                }
+            }
+            
+            return new_array;
+        }
 };
 
 

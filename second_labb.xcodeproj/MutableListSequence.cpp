@@ -1,4 +1,6 @@
 #include <stdexcept>
+#include "LinkedList.cpp"
+#include "Sequence.cpp"
 
 template <class T>
 class MutableListSequence: public Sequence<T>{
@@ -6,9 +8,9 @@ class MutableListSequence: public Sequence<T>{
         LinkedList<T>* items;
     public:
         // constructors
-        ListSequence():ListSequence(nullptr, 0){}
+        MutableListSequence():MutableListSequence(nullptr, 0){}
 
-        ListSequence(T* items, int count){
+        MutableListSequence(T* items, int count){
             if (items == nullptr){
                 this->items = new LinkedList<T>();
             }else{
@@ -16,11 +18,11 @@ class MutableListSequence: public Sequence<T>{
             }
         }
 
-        ListSequence(const LinkedList<T>& list){
+        MutableListSequence(const LinkedList<T>& list){
             this->items = new LinkedList<T>(list);
         }
         // distructor 
-        ~ListSequence(){
+        ~MutableListSequence(){
             delete this->items;
         }
         // getters
@@ -57,5 +59,28 @@ class MutableListSequence: public Sequence<T>{
 
             return this;
         }
+        // map
+        template <typename T2>
+        Sequence<T2>* Map(T2 (*mapper)(T)) const {
+            MutableListSequence<T2>* new_list = new MutableListSequence<T2>();
 
-}
+            for (int index = 0; index < this->GetLength(); index++){
+                new_list->Append(mapper(this->Get(index)));
+            }
+
+            return new_list;
+        }
+        // where 
+        Sequence<T>* Where(bool (*where)(T)) const {
+            MutableListSequence<T>* new_list = new MutableListSequence<T>();
+
+            for (int index = 0; index < this->GetLength(); index++){
+                if (where(this->Get(index))){
+                    new_list->Append(this->Get(index));
+                }
+            }
+            
+            return new_list;
+        }
+
+};
