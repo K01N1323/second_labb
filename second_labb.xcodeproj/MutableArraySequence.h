@@ -94,6 +94,7 @@ public:
     template <typename T2>
     Sequence<T2>* Map(T2 (*mapper)(T)) const {
         MutableArraySequence<T2>* new_array = new MutableArraySequence<T2>();
+
         for (int index = 0; index < this->GetLength(); index++) {
             new_array->Append(mapper(this->items->Get(index)));
         }
@@ -102,6 +103,7 @@ public:
 
     Sequence<T>* Where(bool (*where)(T)) const override {
         MutableArraySequence<T>* new_array = new MutableArraySequence<T>();
+        
         for (int index = 0; index < this->GetLength(); index++) {
             if (where(this->Get(index))) {
                 new_array->Append(this->Get(index));

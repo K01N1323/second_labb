@@ -14,6 +14,7 @@ public:
     DynamicArray(T* items, int count) {
         this->size = count;
         this->items = new T[size];
+
         if (items == nullptr) {
             for (int element = 0; element < size; element++) {
                 this->items[element] = T(0);
@@ -28,6 +29,7 @@ public:
     DynamicArray(const DynamicArray<T>& dynamic_array) {
         this->size = dynamic_array.size;
         this->items = new T[size];
+        
         for (int element = 0; element < size; element++) {
             items[element] = dynamic_array.items[element];
         }

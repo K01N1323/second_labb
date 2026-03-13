@@ -13,10 +13,10 @@ static int tests_failed = 0;
 
 static void check(bool condition, const char* test_name) {
     if (condition) {
-        cout << "  [OK] " << test_name << "\n";
+        cout << "  Тест комплитед " << test_name << "\n";
         tests_passed++;
     } else {
-        cout << "  [FAIL] " << test_name << "\n";
+        cout << "  Ошибка(( " << test_name << "\n";
         tests_failed++;
     }
 }

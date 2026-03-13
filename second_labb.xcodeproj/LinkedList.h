@@ -68,6 +68,7 @@ public:
     const T& Get(int index) const {
         if (index >= size || index < 0) throw std::out_of_range("Элемента с таким индексом не существует");
         Node* current = head;
+
         for (int ind = 0; ind < index; ind++) {
             current = current->next;
         }
@@ -75,8 +76,7 @@ public:
     }
 
     LinkedList<T>* GetSubList(int start_index, int end_index) {
-        if (start_index < 0 || end_index < 0 || end_index >= size || start_index >= size || end_index < start_index)
-            throw std::out_of_range("Индексы невалидны для данного списка");
+        if (start_index < 0 || end_index < 0 || end_index >= size || start_index >= size || end_index < start_index) throw std::out_of_range("Индексы невалидны для данного списка");
 
         LinkedList<T>* sub_list = new LinkedList<T>();
         Node* current = this->head;
@@ -145,6 +145,7 @@ public:
     LinkedList<T>* Concat(LinkedList<T>* list) {
         LinkedList<T>* sub_list = new LinkedList<T>(*this);
         Node* current = list->head;
+        
         for (int index = 0; index < list->size; index++) {
             sub_list->Append(current->data);
             current = current->next;
