@@ -19,7 +19,7 @@ public:
     
     bool operator==(const Bit& other) const { return this->value == other.value; }
 
-    friend std::ostream& operator<<(std::ostream& os, const Bit& b) {// как работает
+    friend std::ostream& operator<<(std::ostream& os, const Bit& b) {// перегрузка оператора << для корректного вывода Бит
         os << b.value;
         return os;
     }
