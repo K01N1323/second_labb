@@ -84,7 +84,7 @@ public:
     ImmutableListSequence<T> *new_list = new ImmutableListSequence<T>();
 
     for (int index = 0; index < this->GetLength(); index++) {
-      new_list->Append(mapper(this->Get(index)));
+      new_list->items->Append(mapper(this->Get(index)));
     }
     return new_list;
   }
@@ -93,7 +93,7 @@ public:
 
     for (int index = 0; index < this->GetLength(); index++) {
       if (where(this->Get(index))) {
-        new_list->Append(this->Get(index));
+        new_list->items->Append(this->Get(index));
       }
     }
     return new_list;
