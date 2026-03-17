@@ -80,7 +80,7 @@ public:
     return new_list;
   }
 
-  Sequence<T> *Map(T (*mapper)(T)) const {
+  Sequence<T> *Map(T (*mapper)(const T &)) const override {
     ImmutableListSequence<T> *new_list = new ImmutableListSequence<T>();
 
     for (int index = 0; index < this->GetLength(); index++) {
@@ -88,7 +88,7 @@ public:
     }
     return new_list;
   }
-  Sequence<T> *Where(bool (*where)(T)) const {
+  Sequence<T> *Where(bool (*where)(const T &)) const override {
     ImmutableListSequence<T> *new_list = new ImmutableListSequence<T>();
 
     for (int index = 0; index < this->GetLength(); index++) {

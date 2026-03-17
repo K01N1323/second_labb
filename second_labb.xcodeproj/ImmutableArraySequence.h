@@ -89,22 +89,26 @@ public:
     return new_array;
   }
 
-  Sequence<T> *Map(T (*mapper)(const T &)) const {
+  Sequence<T> *Map(T (*mapper)(const T &)) const override {
     ImmutableArraySequence<T> *new_array = new ImmutableArraySequence<T>();
 
     for (int index = 0; index < this->GetLength(); index++) {
-      new_array->Append(mapper(this->items->Get(index)));
+      new_array->items->Resize(new_array->items->GetSize() + 1);
+      new_array->items->Set(new_array->items->GetSize() - 1,
+                            mapper(this->Get(index)));
     }
 
     return new_array;
   }
 
-  Sequence<T> *Where(bool (*where)(const T &)) const {
+  Sequence<T> *Where(bool (*where)(const T &)) const override {
     ImmutableArraySequence<T> *new_array = new ImmutableArraySequence<T>();
 
     for (int index = 0; index < this->GetLength(); index++) {
       if (where(this->Get(index))) {
-        new_array->Append(this->Get(index));
+        new_array->items->Resize(new_array->items->GetSize() + 1);
+        new_array->items->Set(new_array->items->GetSize() - 1,
+                              this->Get(index));
       }
     }
 
