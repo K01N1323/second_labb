@@ -21,9 +21,9 @@ static void check(bool condition, const char* test_name) {
     }
 }
 
-static int double_val(int x) { return x * 2; }
-static bool is_even(int x) { return x % 2 == 0; }
-static int sum(int acc, int x) { return acc + x; }
+static int double_val(const int& x) { return x * 2; }
+static bool is_even(const int& x) { return x % 2 == 0; }
+static int sum(const int& acc, const int& x) { return acc + x; }
 
 
 void test_mutable_array_sequence() {

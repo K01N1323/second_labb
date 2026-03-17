@@ -4,23 +4,6 @@
 #include "IEnumerator.h"
 #include <stdexcept>
 
-template <class T> class LinkedListEnumerator : public IEnumerator<T> {
-private:
-  Node *current;
-
-public:
-  LinkedListEnumerator(Node *head) { current = head; }
-
-  const T &GetCurrent() const override { return current->data; }
-
-  void MoveNext() override {
-    if (current != nullptr) {
-      current = current->next;
-    }
-  }
-
-  bool HasNext() const override { return current != nullptr; }
-};
 
 template <class T> class LinkedList {
 private:
@@ -188,6 +171,20 @@ public:
       current = local_current;
     }
   }
+
+  class LinkedListEnumerator : public IEnumerator<T> {
+  private:
+    Node *current;
+  public:
+    LinkedListEnumerator(Node *head) { current = head; }
+    const T &GetCurrent() const override { return current->data; }
+    void MoveNext() override {
+      if (current != nullptr) current = current->next;
+    }
+    bool HasNext() const override { return current != nullptr; }
+  };
+
+  IEnumerator<T> *GetEnumerator() const { return new LinkedListEnumerator(this->head); }
 };
 
 #endif // LINKEDLIST_H

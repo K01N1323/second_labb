@@ -7,9 +7,9 @@
 
 using namespace std;
 
-int MultiplyBy10(int x) { return x * 10; }
-bool IsEven(int x) { return x % 2 == 0; }
-int Sum(int x, int y) { return x + y; }
+int MultiplyBy10(const int& x) { return x * 10; }
+bool IsEven(const int& x) { return x % 2 == 0; }
+int Sum(const int& x, const int& y) { return x + y; }
 
 template <typename T>
 void PrintSequence(Sequence<T>* seq) {

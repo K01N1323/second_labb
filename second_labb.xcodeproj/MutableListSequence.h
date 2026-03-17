@@ -61,32 +61,29 @@ public:
   }
 
   IEnumerator<T> *GetEnumerator() const override {
-    return new LinkedListEnumerator<T>(this->items->head);
+    return this->items->GetEnumerator();
   }
 
   Sequence<T> *Concat(Sequence<T> *list) override {
-
+    MutableListSequence<T> *result = new MutableListSequence<T>(*this->items);
     IEnumerator<T> *it = list->GetEnumerator();
-
     while (it->HasNext()) {
-      this->items->Append(it->GetCurrent());
-
+      result->items->Append(it->GetCurrent());
       it->MoveNext();
     }
     delete it;
-
-    return this;
+    return result;
   }
 
-  template <typename T2> Sequence<T2> *Map(T2 (*mapper)(T)) const {
-    MutableListSequence<T2> *new_list = new MutableListSequence<T2>();
+  Sequence<T> *Map(T (*mapper)(const T &)) const override {
+    MutableListSequence<T> *new_list = new MutableListSequence<T>();
     for (int index = 0; index < this->GetLength(); index++) {
       new_list->Append(mapper(this->Get(index)));
     }
     return new_list;
   }
 
-  Sequence<T> *Where(bool (*where)(T)) const override {
+  Sequence<T> *Where(bool (*where)(const T &)) const override {
     MutableListSequence<T> *new_list = new MutableListSequence<T>();
     for (int index = 0; index < this->GetLength(); index++) {
       if (where(this->Get(index))) {

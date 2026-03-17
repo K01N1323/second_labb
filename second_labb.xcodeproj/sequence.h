@@ -24,9 +24,7 @@ public:
 
   virtual IEnumerator<T> *GetEnumerator() const = 0;
 
-  template <typename T2> Sequence<T2> *Map(T2 (*mapper)(const T &)) const {
-    return nullptr;
-  }
+  virtual Sequence<T> *Map(T (*mapper)(const T &)) const = 0;
 
   virtual Sequence<T> *Where(bool (*where)(const T &)) const = 0;
 
@@ -40,8 +38,4 @@ public:
     return result;
   }
 };
-// конст ссылка а не T
-// с T2 такая же ситтуация
-// реализоватть protected newsequnece для метода map который создаст нужный
-// sequence
 #endif // SEQUENCE_H
