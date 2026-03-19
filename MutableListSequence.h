@@ -1,6 +1,7 @@
 #ifndef MUTABLELISTSEQUENCE_H
 #define MUTABLELISTSEQUENCE_H
 
+#include "ImmutableListSequence.h"
 #include "LinkedList.h"
 #include "sequence.h"
 #include <stdexcept>
