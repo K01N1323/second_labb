@@ -15,6 +15,8 @@ public:
 
   virtual Sequence<T> *GetSubsequence(int startIndex, int endIndex) const = 0;
 
+  virtual Sequence<T> *Instance() const = 0;
+
   virtual Sequence<T> *Append(T item) = 0;
   virtual Sequence<T> *Prepend(T item) = 0;
   virtual Sequence<T> *InsertAt(T item, int index) = 0;
