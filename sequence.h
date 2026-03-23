@@ -22,6 +22,8 @@ public:
 
   const T &operator[](int index) const { return this->Get(index); }
 
+  virtual Sequence<T> *Instance() = 0;
+
   virtual IEnumerator<T> *GetEnumerator() const = 0;
 
   virtual Sequence<T> *Map(T (*mapper)(const T &)) const = 0;

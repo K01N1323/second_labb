@@ -61,6 +61,8 @@ public:
     return result;
   }
 
+  Sequence<T> *Instance() override { return this; }
+
   IEnumerator<T> *GetEnumerator() const override {
     return this->items->GetEnumerator();
   }

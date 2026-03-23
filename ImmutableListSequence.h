@@ -80,6 +80,10 @@ public:
     return new_list;
   }
 
+  Sequence<T> *Instance() override {
+    return new ImmutableListSequence<T>(*this);
+  }
+
   Sequence<T> *Map(T (*mapper)(const T &)) const override {
     ImmutableListSequence<T> *new_list = new ImmutableListSequence<T>();
 
