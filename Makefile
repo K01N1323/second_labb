@@ -1,9 +1,8 @@
 CXX = clang++
-CXXFLAGS = -std=c++17 -Wall
+CXXFLAGS = -std=c++17 -Wall -Ibase_structures -Isequences -Icomplex_sequences -Iui -Itests
 
-SRCS = main.cpp menu.cpp tests.cpp
+SRCS = main.cpp ui/Menu.cpp tests/Tests.cpp
 OBJS = $(SRCS:.cpp=.o)
-HDRS = $(wildcard *.h)
 TARGET = main
 
 all: $(TARGET)
@@ -11,7 +10,7 @@ all: $(TARGET)
 $(TARGET): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(TARGET)
 
-%.o: %.cpp $(HDRS)
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
