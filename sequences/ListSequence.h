@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "LinkedList.h"
-#include "sequence.h"
+#include "Sequence.h"
 
 // Абстрактный базовый класс для последовательностей на основе связного списка
 template <class T> class ListSequence : public Sequence<T> {

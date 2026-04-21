@@ -5,7 +5,7 @@
 #include "ImmutableListSequence.h"
 #include "MutableArraySequence.h"
 #include "MutableListSequence.h"
-#include "tests.h"
+#include "Tests.h"
 
 using namespace std;
 

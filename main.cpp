@@ -1,5 +1,5 @@
-#include "menu.h"
-#include "tests.h"
+#include "Menu.h"
+#include "Tests.h"
 
 // Точка входа в программу
 int main() {
