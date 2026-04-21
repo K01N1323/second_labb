@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Sequence.h"
-#include "BitSequence.cpp"
+#include "BitSequence.h"
 #include "ImmutableArraySequence.h"
 #include "ImmutableListSequence.h"
 #include "MutableArraySequence.h"
