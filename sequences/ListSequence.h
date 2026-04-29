@@ -38,10 +38,10 @@ public:
   virtual ~ListSequence() override { delete this->items; }
 
   // Создает экземпляр текущего типа
-  virtual ListSequence<T> *Instance() = 0;
+  virtual ListSequence<T> *Instance() override = 0;
 
   // Создает пустую последовательность текущего типа
-  virtual ListSequence<T> *CreateEmpty() const = 0;
+  virtual ListSequence<T> *CreateEmpty() const override = 0;
 
   // Возвращает первый элемент последовательности
   const T &GetFirst() const override { return this->items->GetFirst(); }
@@ -61,7 +61,7 @@ public:
   }
 
   // Добавляет элемент в конец последовательности
-  Sequence<T> *Append(T item) override {
+  Sequence<T> *Append(const T &item) override {
     ListSequence<T> *target = this->Instance();
 
     target->items->Append(item);
@@ -70,7 +70,7 @@ public:
   }
 
   // Добавляет элемент в начало последовательности
-  Sequence<T> *Prepend(T item) override {
+  Sequence<T> *Prepend(const T &item) override {
     ListSequence<T> *target = this->Instance();
 
     target->items->Prepend(item);
@@ -79,7 +79,7 @@ public:
   }
 
   // Вставляет элемент по заданному индексу
-  Sequence<T> *InsertAt(T item, int index) override {
+  Sequence<T> *InsertAt(const T &item, int index) override {
     ListSequence<T> *target = this->Instance();
 
     target->items->InsertAt(item, index);
@@ -92,10 +92,17 @@ public:
   Sequence<T> *Concat(Sequence<T> *list) override {
     ListSequence<T> *new_list = this->CreateEmpty();
 
-    for (int i = 0; i < this->GetLength(); i++) {
-      new_list->items->Append(this->Get(i));
+    // Обход текущего списка через итератор (O(N) вместо O(N^2))
+    IEnumerator<T> *it_self = this->GetEnumerator();
+    if (it_self != nullptr) {
+      while (it_self->HasNext()) {
+        new_list->items->Append(it_self->GetCurrent());
+        it_self->MoveNext();
+      }
+      delete it_self;
     }
 
+    // Обход переданного списка через итератор
     IEnumerator<T> *it = list->GetEnumerator();
     if (it != nullptr) {
       while (it->HasNext()) {
@@ -119,30 +126,6 @@ public:
 
     delete new_list->items;
     new_list->items = raw_list;
-
-    return new_list;
-  }
-
-  // Отображает элементы последовательности с применением функции-маппера
-  Sequence<T> *Map(T (*mapper)(const T &)) const override {
-    ListSequence<T> *new_list = this->CreateEmpty();
-
-    for (int index = 0; index < this->GetLength(); index++) {
-      new_list->items->Append(mapper(this->Get(index)));
-    }
-
-    return new_list;
-  }
-
-  // Фильтрует элементы последовательности по заданному условию
-  Sequence<T> *Where(bool (*where)(const T &)) const override {
-    ListSequence<T> *new_list = this->CreateEmpty();
-
-    for (int index = 0; index < this->GetLength(); index++) {
-      if (where(this->Get(index))) {
-        new_list->items->Append(this->Get(index));
-      }
-    }
 
     return new_list;
   }

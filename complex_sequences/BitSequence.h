@@ -2,7 +2,8 @@
 #define BIT_SEQUENCE_H
 
 #include <iostream>
-#include "MutableArraySequence.h"
+#include <cstdint>
+#include <stdexcept>
 
 // Класс, представляющий отдельный бит (0 или 1)
 class Bit {
@@ -38,23 +39,49 @@ public:
     friend std::ostream &operator<<(std::ostream &os, const Bit &b);
 };
 
-// Класс для работы с последовательностью битов
-class BitSequence : public MutableArraySequence<Bit> {
+// Класс для работы с последовательностью битов (упакованное хранение: 8 бит на байт)
+class BitSequence {
+private:
+    uint8_t *data;       // Буфер байтов для хранения упакованных битов
+    int bit_count;       // Количество логических битов
+    int byte_capacity;   // Выделенная ёмкость в байтах
+
+    // Увеличивает ёмкость буфера при необходимости
+    void EnsureCapacity(int required_bytes);
+
 public:
     // Конструктор по умолчанию
     BitSequence();
 
+    // Конструктор копирования
+    BitSequence(const BitSequence &other);
+
+    // Деструктор
+    ~BitSequence();
+
+    // Добавляет бит в конец последовательности
+    void Append(const Bit &bit);
+
+    // Возвращает бит по логическому индексу
+    Bit Get(int index) const;
+
+    // Возвращает количество логических битов
+    int GetLength() const;
+
     // Выполняет побитовое И с другой последовательностью битов
-    BitSequence *And(Sequence<Bit> *other) const;
+    BitSequence *And(const BitSequence *other) const;
     
     // Выполняет побитовое ИЛИ с другой последовательностью битов
-    BitSequence *Or(Sequence<Bit> *other) const;
+    BitSequence *Or(const BitSequence *other) const;
     
     // Выполняет побитовое ИСКЛЮЧАЮЩЕЕ ИЛИ с другой последовательностью битов
-    BitSequence *Xor(Sequence<Bit> *other) const;
+    BitSequence *Xor(const BitSequence *other) const;
     
     // Инвертирует все биты в последовательности
     BitSequence *Not() const;
+
+    // Перегрузка оператора вывода в поток
+    friend std::ostream &operator<<(std::ostream &os, const BitSequence &bs);
 };
 
 #endif // BIT_SEQUENCE_H

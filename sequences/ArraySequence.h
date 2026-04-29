@@ -37,10 +37,10 @@ public:
     }
 
     // Создает экземпляр текущего типа
-    virtual ArraySequence<T> *Instance() = 0;
+    virtual ArraySequence<T> *Instance() override = 0;
 
     // Создает пустую последовательность текущего типа
-    virtual ArraySequence<T> *CreateEmpty() const = 0;
+    virtual ArraySequence<T> *CreateEmpty() const override = 0;
 
     // Возвращает первый элемент последовательности
     const T &GetFirst() const override { 
@@ -68,7 +68,7 @@ public:
     }
 
     // Добавляет элемент в конец последовательности
-    Sequence<T> *Append(T item) override {
+    Sequence<T> *Append(const T &item) override {
         ArraySequence<T> *target = this->Instance();
         
         target->items->Resize(target->items->GetSize() + 1);
@@ -78,7 +78,7 @@ public:
     }
 
     // Добавляет элемент в начало последовательности
-    Sequence<T> *Prepend(T item) override {
+    Sequence<T> *Prepend(const T &item) override {
         ArraySequence<T> *target = this->Instance();
         int size = target->items->GetSize();
         
@@ -93,7 +93,7 @@ public:
     }
 
     // Вставляет элемент по заданному индексу
-    Sequence<T> *InsertAt(T item, int index) override {
+    Sequence<T> *InsertAt(const T &item, int index) override {
         if (index < 0 || index > this->GetLength()) {
             throw std::out_of_range("Индекс невалиден");
         }
@@ -146,42 +146,6 @@ public:
 
             if (result != old_ptr) {
                 delete old_ptr;
-            }
-        }
-        
-        return result;
-    }
-
-    // Отображает элементы последовательности с применением функции-маппера
-    Sequence<T> *Map(T (*mapper)(const T &)) const override {
-        Sequence<T> *result = this->CreateEmpty();
-        
-        for (int index = 0; index < this->GetLength(); index++) {
-            Sequence<T> *old_ptr = result;
-            
-            result = result->Append(mapper(this->Get(index)));
-            
-            if (result != old_ptr) {
-                delete old_ptr;
-            }
-        }
-        
-        return result;
-    }
-
-    // Фильтрует элементы последовательности по заданному условию
-    Sequence<T> *Where(bool (*where)(const T &)) const override {
-        Sequence<T> *result = this->CreateEmpty();
-        
-        for (int index = 0; index < this->GetLength(); index++) {
-            if (where(this->Get(index))) {
-                Sequence<T> *old_ptr = result;
-                
-                result = result->Append(this->Get(index));
-                
-                if (result != old_ptr) {
-                    delete old_ptr;
-                }
             }
         }
         

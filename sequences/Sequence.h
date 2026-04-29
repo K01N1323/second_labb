@@ -27,13 +27,13 @@ public:
     virtual Sequence<T> *GetSubsequence(int startIndex, int endIndex) const = 0;
 
     // Добавляет элемент в конец последовательности
-    virtual Sequence<T> *Append(T item) = 0;
+    virtual Sequence<T> *Append(const T &item) = 0;
     
     // Добавляет элемент в начало последовательности
-    virtual Sequence<T> *Prepend(T item) = 0;
+    virtual Sequence<T> *Prepend(const T &item) = 0;
     
     // Вставляет элемент по заданному индексу
-    virtual Sequence<T> *InsertAt(T item, int index) = 0;
+    virtual Sequence<T> *InsertAt(const T &item, int index) = 0;
     
     // Возвращает новую последовательность, являющуюся конкатенацией текущей и переданной
     virtual Sequence<T> *Concat(Sequence<T> *list) = 0;
@@ -46,22 +46,80 @@ public:
     // Возвращает экземпляр текущего типа
     virtual Sequence<T> *Instance() = 0;
 
+    // Создает пустую последовательность текущего типа
+    virtual Sequence<T> *CreateEmpty() const = 0;
+
     // Возвращает итератор для обхода последовательности
     virtual IEnumerator<T> *GetEnumerator() const = 0;
 
     // Создает новую последовательность путем применения функции к каждому элементу
-    virtual Sequence<T> *Map(T (*mapper)(const T &)) const = 0;
+    Sequence<T> *Map(T (*mapper)(const T &)) const {
+        Sequence<T> *result = this->CreateEmpty();
+
+        IEnumerator<T> *it = this->GetEnumerator();
+        if (it != nullptr) {
+            while (it->HasNext()) {
+                Sequence<T> *old_ptr = result;
+                result = result->Append(mapper(it->GetCurrent()));
+                if (result != old_ptr) delete old_ptr;
+                it->MoveNext();
+            }
+            delete it;
+        } else {
+            for (int index = 0; index < this->GetLength(); index++) {
+                Sequence<T> *old_ptr = result;
+                result = result->Append(mapper(this->Get(index)));
+                if (result != old_ptr) delete old_ptr;
+            }
+        }
+
+        return result;
+    }
 
     // Создает новую последовательность, состоящую только из элементов, удовлетворяющих условию
-    virtual Sequence<T> *Where(bool (*where)(const T &)) const = 0;
+    Sequence<T> *Where(bool (*where)(const T &)) const {
+        Sequence<T> *result = this->CreateEmpty();
+
+        IEnumerator<T> *it = this->GetEnumerator();
+        if (it != nullptr) {
+            while (it->HasNext()) {
+                if (where(it->GetCurrent())) {
+                    Sequence<T> *old_ptr = result;
+                    result = result->Append(it->GetCurrent());
+                    if (result != old_ptr) delete old_ptr;
+                }
+                it->MoveNext();
+            }
+            delete it;
+        } else {
+            for (int index = 0; index < this->GetLength(); index++) {
+                if (where(this->Get(index))) {
+                    Sequence<T> *old_ptr = result;
+                    result = result->Append(this->Get(index));
+                    if (result != old_ptr) delete old_ptr;
+                }
+            }
+        }
+
+        return result;
+    }
 
     // Сворачивает последовательность в одно значение, используя переданную функцию
     template <typename T2>
     T2 Reduce(T2 (*reduce_func)(const T2 &, const T &), const T2 &start_value) const {
         T2 result = start_value;
         
-        for (int index = 0; index < this->GetLength(); index++) {
-            result = reduce_func(result, this->Get(index));
+        IEnumerator<T> *it = this->GetEnumerator();
+        if (it != nullptr) {
+            while (it->HasNext()) {
+                result = reduce_func(result, it->GetCurrent());
+                it->MoveNext();
+            }
+            delete it;
+        } else {
+            for (int index = 0; index < this->GetLength(); index++) {
+                result = reduce_func(result, this->Get(index));
+            }
         }
         
         return result;

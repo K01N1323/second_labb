@@ -1,4 +1,5 @@
 #include <iostream>
+#include <limits>
 
 #include "Sequence.h"
 #include "BitSequence.h"
@@ -10,6 +11,24 @@
 #include "Tests.h"
 
 using namespace std;
+
+// Вспомогательная функция для безопасного чтения целого числа из cin
+// При некорректном вводе выводит сообщение и повторяет запрос
+static int SafeReadInt(const char *prompt) {
+    int value;
+    while (true) {
+        cout << prompt;
+        cin >> value;
+        if (cin.fail()) {
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            cout << "Некорректный ввод! Введите целое число.\n";
+        } else {
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            return value;
+        }
+    }
+}
 
 // Умножает число на 10
 int MultiplyBy10(const int &x) { return x * 10; }
@@ -25,6 +44,15 @@ template <typename T> void PrintSequence(Sequence<T> *seq) {
   cout << "[ ";
   for (int index = 0; index < seq->GetLength(); index++) {
     cout << seq->Get(index) << " ";
+  }
+  cout << "]\n";
+}
+
+// Функция для вывода BitSequence на экран
+static void PrintBitSequence(BitSequence *bs) {
+  cout << "[ ";
+  for (int index = 0; index < bs->GetLength(); index++) {
+    cout << bs->Get(index) << " ";
   }
   cout << "]\n";
 }
@@ -45,17 +73,14 @@ void TestManualSequence(Sequence<int> *&seq, const char *name, bool is_mutable) 
     cout << "7. Where (IsEven)\n";
     cout << "8. Reduce (Sum)\n";
     cout << "0. Назад\n";
-    cout << "Выбор: ";
-    cin >> choice;
+    choice = SafeReadInt("Выбор: ");
 
     try {
       if (choice == 1 || choice == 2 || choice == 3) {
-        int val, idx = 0;
-        cout << "Введи число: ";
-        cin >> val;
+        int val = SafeReadInt("Введи число: ");
+        int idx = 0;
         if (choice == 3) {
-          cout << "Введи индекс: ";
-          cin >> idx;
+          idx = SafeReadInt("Введи индекс: ");
         }
 
         Sequence<int> *old = seq;
@@ -69,16 +94,11 @@ void TestManualSequence(Sequence<int> *&seq, const char *name, bool is_mutable) 
         if (!is_mutable && old != seq)
           delete old;
       } else if (choice == 4) {
-        int idx;
-        cout << "Введи индекс: ";
-        cin >> idx;
+        int idx = SafeReadInt("Введи индекс: ");
         cout << "Значение: " << seq->Get(idx) << "\n";
       } else if (choice == 5) {
-        int start, end;
-        cout << "Start index: ";
-        cin >> start;
-        cout << "End index: ";
-        cin >> end;
+        int start = SafeReadInt("Start index: ");
+        int end = SafeReadInt("End index: ");
         Sequence<int> *sub = seq->GetSubsequence(start, end);
         cout << "Результат: ";
         PrintSequence(sub);
@@ -114,21 +134,19 @@ void TestBitSequence() {
   while (choice != 0) {
     cout << "\nBitSequence Testing\n";
     cout << "Маска 1: ";
-    PrintSequence(bits1);
+    PrintBitSequence(bits1);
     cout << "Маска 2: ";
-    PrintSequence(bits2);
+    PrintBitSequence(bits2);
     cout << "1. Добавить бит в Маску 1\n";
     cout << "2. Добавить бит в Маску 2\n";
     cout << "3. Побитовое И (AND)\n";
     cout << "4. Побитовое ИЛИ (OR)\n";
     cout << "5. Инверсия Маски 1 (NOT)\n";
-    cout << "0. Назад\nВыбор: ";
-    cin >> choice;
+    cout << "0. Назад\n";
+    choice = SafeReadInt("Выбор: ");
 
     if (choice == 1 || choice == 2) {
-      int val;
-      cout << "Введи 0 или 1: ";
-      cin >> val;
+      int val = SafeReadInt("Введи 0 или 1: ");
       if (choice == 1)
         bits1->Append(Bit(val));
       else
@@ -136,17 +154,17 @@ void TestBitSequence() {
     } else if (choice == 3) {
       BitSequence *res = bits1->And(bits2);
       cout << "Результат AND: ";
-      PrintSequence(res);
+      PrintBitSequence(res);
       delete res;
     } else if (choice == 4) {
       BitSequence *res = bits1->Or(bits2);
       cout << "Результат OR: ";
-      PrintSequence(res);
+      PrintBitSequence(res);
       delete res;
     } else if (choice == 5) {
       BitSequence *res = bits1->Not();
       cout << "Результат NOT: ";
-      PrintSequence(res);
+      PrintBitSequence(res);
       delete res;
     }
   }
@@ -169,8 +187,7 @@ void RunMenu() {
     cout << "6. Запустить все автотесты\n";
     cout << "0. Выход из программы\n";
     cout << "\n";
-    cout << "Введи номер пункта: ";
-    cin >> main_choice;
+    main_choice = SafeReadInt("Введи номер пункта: ");
 
     Sequence<int> *s = nullptr;
     switch (main_choice) {

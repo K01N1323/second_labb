@@ -54,7 +54,7 @@ public:
     }
 
     // Устанавливает значение элемента по индексу
-    void Set(int index, T value) {
+    void Set(int index, const T &value) {
         if (index < 0 || index >= size) {
             throw std::out_of_range("Индекс невалиден");
         }

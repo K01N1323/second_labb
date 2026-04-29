@@ -13,7 +13,7 @@ private:
         T data;
         Node *next;
         
-        Node(T value) {
+        Node(const T &value) {
             this->data = value;
             this->next = nullptr;
         }
@@ -138,7 +138,7 @@ public:
     }
 
     // Добавляет элемент в конец списка
-    void Append(T item) {
+    void Append(const T &item) {
         Node *new_node = new Node(item);
         
         if (head == nullptr) {
@@ -153,7 +153,7 @@ public:
     }
 
     // Добавляет элемент в начало списка
-    void Prepend(T item) {
+    void Prepend(const T &item) {
         Node *new_node = new Node(item);
         
         if (this->head == nullptr) {
@@ -168,7 +168,7 @@ public:
     }
 
     // Вставляет элемент по заданному индексу
-    void InsertAt(T item, int index) {
+    void InsertAt(const T &item, int index) {
         if (index >= size || index < 0) {
             throw std::out_of_range("Индекс вне списка");
         }
